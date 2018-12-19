@@ -1,6 +1,10 @@
 # YLDiscolorTextView
 一个支持前后文字不同颜色和大小的TextView
 
+# 博客
+
+https://blog.csdn.net/qq_26030147/article/details/85072706
+
 # XML
                         <com.jt.ylcarousel.YLDiscolorTextView
                             android:layout_width="wrap_content"
