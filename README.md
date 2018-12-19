@@ -16,4 +16,4 @@
                             app:beforeTextSize="14sp" />
                             
     
-![Alt text](/path/to/img.jpg)
+![Alt text](https://github.com/ai2101039/YLDiscolorTextView/blob/master/2.jpg)
