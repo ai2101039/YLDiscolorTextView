@@ -16,3 +16,4 @@
                             app:beforeTextSize="14sp" />
                             
     
+![Alt text](/path/to/img.jpg)
