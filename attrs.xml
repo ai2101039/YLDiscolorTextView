@@ -1,22 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="YLPagerIndicator">
-        <attr name="radiusArc" format="dimension">圆环半径</attr>
-        <attr name="stockWidthArc" format="dimension">圆环线宽</attr>
-        <attr name="colorArc" format="color">圆环颜色</attr>
-        <attr name="radiusFill" format="dimension">实心半径</attr>
-        <attr name="colorFill" format="color">实心颜色</attr>
-        <attr name="count" format="integer">指示点数量</attr>
-        <attr name="space" format="dimension">间距</attr>
-    </declare-styleable>
-
-    <declare-styleable name="YLDiscolorTextView">
-        <attr name="beforeText">前面的文字</attr>
-        <attr name="beforeTextColor">前面的文字颜色</attr>
-        <attr name="beforeTextSize">前面文字的大小</attr>
-        <attr name="afterText">后面的文字</attr>
-        <attr name="afterTextColor">后面的文字颜色</attr>
-        <attr name="afterTextSize">后面文字的大小</attr>
-
+        <!-- 前后不同颜色/大小 -->
+    <declare-styleable name="YLDiscolorTextView" tools:ignore="ResourceName">
+        <attr name="beforeText" format="string">前面的文字</attr>
+        <attr name="beforeTextColor" format="color">前面的文字颜色</attr>
+        <attr name="beforeTextSize" format="dimension">前面文字的大小</attr>
+        <attr name="afterText" format="string">后面的文字</attr>
+        <attr name="afterTextColor" format="color">后面的文字颜色</attr>
+        <attr name="afterTextSize" format="dimension">后面文字的大小</attr>
     </declare-styleable>
 </resources>
