@@ -1,22 +1,30 @@
-package com.jt.ylcarousel;
+package cn.com.changjiu.library.widget;
 
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.text.TextPaint;
+import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.widget.TextView;
+import android.view.View;
+
+import com.blankj.utilcode.util.SizeUtils;
+
+import cn.com.changjiu.library.R;
+
 
 /**
- * @author 高延荣
- * @date 2018/12/18 17:04
- * 描述: 暂时支持如
- * ￥ 100/20期，其中 ”￥ 100“ 的颜色 和  ”/20期“  的颜色不同 字号不同，另外 文字绘制时，调整baseline，使得文字底部相同
+ * -----------------------------------------------
+ * 作    者：高延荣
+ * 电    话：18963580395
+ * 创建日期：2019/4/11 - 10:54 AM
+ * 描    述：1999元/天，其中 ”1999“ 的颜色 和  ”元/天“  的颜色不同 字号不同，另外 文字绘制时，调整baseline，使得文字底部相同
+ * 修订历史：
+ * -----------------------------------------------
  */
-public class YLDiscolorTextView extends android.support.v7.widget.AppCompatTextView {
+public class YLDiscolorTextView extends androidx.appcompat.widget.AppCompatTextView {
 
     private String beforeText = "";
     private int beforeColor;
@@ -28,13 +36,15 @@ public class YLDiscolorTextView extends android.support.v7.widget.AppCompatTextV
     private float afterSize;
 
     /**
-     * 前面文字的宽度
+     * 前面文字的宽度、高度
      */
     private float beforeWidth;
+    private float beforeHeight;
     /**
-     * 后面文字的宽度
+     * 后面文字的宽度、高度
      */
     private float afterWidth;
+    private float afterHeight;
     /**
      * 画笔
      */
@@ -54,11 +64,11 @@ public class YLDiscolorTextView extends android.support.v7.widget.AppCompatTextV
         resources = context.getResources();
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.YLDiscolorTextView);
         beforeText = typedArray.getString(R.styleable.YLDiscolorTextView_beforeText);
-        beforeColor = typedArray.getColor(R.styleable.YLDiscolorTextView_beforeTextColor, resources.getColor(R.color._F86161));
-        beforeSize = typedArray.getDimension(R.styleable.YLDiscolorTextView_beforeTextSize, YLUtil.dp2px(context, 14));
+        beforeColor = typedArray.getColor(R.styleable.YLDiscolorTextView_beforeTextColor, resources.getColor(R.color.lib_000));
+        beforeSize = typedArray.getDimension(R.styleable.YLDiscolorTextView_beforeTextSize, SizeUtils.dp2px(14));
         afterText = typedArray.getString(R.styleable.YLDiscolorTextView_afterText);
-        afterColor = typedArray.getColor(R.styleable.YLDiscolorTextView_afterTextColor, resources.getColor(R.color._333));
-        afterSize = typedArray.getDimension(R.styleable.YLDiscolorTextView_afterTextSize, YLUtil.dp2px(context, 12));
+        afterColor = typedArray.getColor(R.styleable.YLDiscolorTextView_afterTextColor, resources.getColor(R.color.lib_000));
+        afterSize = typedArray.getDimension(R.styleable.YLDiscolorTextView_afterTextSize, SizeUtils.dp2px(12));
         typedArray.recycle();
 
         initPaint();
@@ -76,46 +86,71 @@ public class YLDiscolorTextView extends android.support.v7.widget.AppCompatTextV
         afterPaint.setTextSize(afterSize);
         afterPaint.setColor(afterColor);
 
-        beforeWidth = beforePaint.measureText(beforeText);
-        afterWidth = afterPaint.measureText(afterText);
+        measureText();
+    }
+
+    private void measureText() {
+        if (!TextUtils.isEmpty(beforeText)){
+            beforeWidth = beforePaint.measureText(beforeText);
+            Paint.FontMetrics fontMetrics = beforePaint.getFontMetrics();
+            beforeHeight = fontMetrics.bottom - fontMetrics.top;
+        }
+        if (!TextUtils.isEmpty(afterText)){
+            afterWidth = afterPaint.measureText(afterText);
+            Paint.FontMetrics fontMetrics = afterPaint.getFontMetrics();
+            afterHeight = fontMetrics.bottom - fontMetrics.top;
+        }
+
+
+
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int width = MeasureSpec.getSize(widthMeasureSpec);
-        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
+        int width = View.MeasureSpec.getSize(widthMeasureSpec);
+        int widthMode = View.MeasureSpec.getMode(widthMeasureSpec);
 
-        int height = MeasureSpec.getSize(heightMeasureSpec);
-        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
+        int height = View.MeasureSpec.getSize(heightMeasureSpec);
+        int heightMode = View.MeasureSpec.getMode(heightMeasureSpec);
 
-        if (widthMode == MeasureSpec.AT_MOST || widthMode == MeasureSpec.UNSPECIFIED) {
+        if (widthMode == View.MeasureSpec.AT_MOST || widthMode == View.MeasureSpec.UNSPECIFIED) {
             width = (int) (beforeWidth + afterWidth) + getPaddingLeft() + getPaddingRight();
         }
 
-        if (heightMode == MeasureSpec.AT_MOST || heightMode == MeasureSpec.UNSPECIFIED) {
-            height = (int) Math.max(beforeSize, afterSize) + getPaddingTop() + getPaddingBottom();
+        if (heightMode == View.MeasureSpec.AT_MOST || heightMode == View.MeasureSpec.UNSPECIFIED) {
+            height = (int) Math.max(beforeHeight, afterHeight) + getPaddingTop() + getPaddingBottom();
         }
 
-        setMeasuredDimension(MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY),
-                MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY));
+        setMeasuredDimension(View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY));
     }
 
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        TextPaint textPaint = beforeSize < afterSize ? afterPaint : beforePaint;
+        TextPaint textPaint = beforeHeight < afterHeight ? afterPaint : beforePaint;
         Paint.FontMetrics fontMetrics = textPaint.getFontMetrics();
         float y = -fontMetrics.ascent;
-        canvas.drawText(beforeText, 0, y, beforePaint);
-        canvas.drawText(afterText, beforeWidth, y, afterPaint);
+        if (!TextUtils.isEmpty(beforeText)){
+            canvas.drawText(beforeText, 0, y, beforePaint);
+        }
 
-        //  baseLine
-        Paint paint = new Paint();
-        paint.setColor(resources.getColor(R.color._238E23));
-        paint.setStrokeWidth(1);
-        paint.setAntiAlias(true);
-        canvas.drawLine(0, y, beforeWidth + afterWidth, y, paint);
+        if (!TextUtils.isEmpty(afterText)){
+            canvas.drawText(afterText, beforeWidth, y, afterPaint);
+        }
+
     }
 
+    public void setBeforeText(String beforeText) {
+        this.beforeText = beforeText;
+        measureText();
+        requestLayout();
+    }
+
+    public void setAfterText(String afterText) {
+        this.afterText = afterText;
+        measureText();
+        requestLayout();
+    }
 }
